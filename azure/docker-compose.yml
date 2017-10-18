@@ -1,0 +1,21 @@
+version: '3'
+services:
+  portainer:
+    image: portainer/portainer:1.14.3
+    container_name: Portainer
+    restart: always
+    networks:
+      - spacely-eng
+    hostname: unix:///var/run/docker.sock
+    ports:
+      - 50443:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /nfs/docker-data/container-data/administration/portainer/data:/data
+      - /nfs/docker-data/container-data/administration/portainer/certs:/certs:ro
+      - /home/spacely-eng-admin/.docker:/docker-certs:ro
+    command: --ssl --sslcert /certs/server-cert.pem --sslkey /certs/server-key.pem --tlsverify --tlscacert /docker-certs/ca.pem --tlscert /docker-certs/server-cert.pem --tlskey /docker-certs/server-key.pem
+networks:
+  spacely-eng:
+    external:
+      name: spacely-eng-disparate
